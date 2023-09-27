@@ -1,0 +1,41 @@
+body {
+    background-color: wheat;
+}
+
+p {
+    margin: 0;
+}
+
+.receipt {
+    border-bottom: solid 2px grey;
+    color: rgb(0, 136, 255);
+    padding: .25em;
+}
+
+.ingredient-type {
+    text-decoration: underline;
+    font-family: cursive;
+    color: orange;
+    font-size: 25pt;
+}
+
+.receipt-container {
+    background-color: white;
+    box-shadow: 1px 1px 8px grey;
+    min-height: 60vh;
+}
+
+
+.card {
+    text-align: center;
+}
+
+.card>img {
+    max-width: 100%;
+    max-height: 7em;
+    object-fit: cover;
+}
+
+.item-dump>div:nth-child(even) {
+    background-color: rgb(186, 186, 186);
+}
