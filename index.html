@@ -32,15 +32,21 @@
                 <div class="row item-dump" id="item-dump">
                     <!-- CARTED ITEMS HERE -->
                 </div>
+                <div class="row fs-2 fw-bold">
+                    <p>Grand Total: $<span id="price">0.00</span></p>
+                </div>
+                <div class="row p-3">
+                    <button class="btn btn-warning" onclick="checkout()">Checkout</button>
+                </div>
             </div>
             <div class="col-5 col-md-7 px-3">
-                <div class="row" id="toppings-dump">
+                <div class="row" id="topping">
                     <div class="col-12">
                         <p class="ingredient-type">Toppings</p>
                     </div>
                     <!-- TOPPINGS FILL HERE -->
                 </div>
-                <div class="row" id="ice-cream-dump">
+                <div class="row" id="ice cream">
                     <div class="col-12">
                         <p class="ingredient-type">Ice Cream</p>
                     </div>
@@ -50,6 +56,7 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="app.js"></script>
 
 </body>
