@@ -21,6 +21,20 @@ const items = [{
     type: 'ice cream'
 },
 {
+    name: 'Chocolate',
+    price: 1.25,
+    quantity: 0,
+    image: 'https://images.unsplash.com/photo-1597648152428-f883fbc9c873?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80',
+    type: 'ice cream'
+},
+{
+    name: 'Coffee',
+    price: 1.25,
+    quantity: 0,
+    image: 'https://www.simplyrecipes.com/thmb/Y-D7jtMXRW_q3IZmZ-aGuguw_QE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2007__04__coffee-ice-cream-vertical-00dc174a766a4ff79f443e516e11fcb7.jpg',
+    type: 'ice cream'
+},
+{
     name: 'Sprinkles',
     price: .25,
     quantity: 0,
@@ -32,6 +46,20 @@ const items = [{
     price: .25,
     quantity: 0,
     image: 'https://images.unsplash.com/photo-1585502866757-30ae9e509e31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3185&q=80',
+    type: 'topping'
+},
+{
+    name: 'Gummy Bears',
+    price: .50,
+    quantity: 0,
+    image: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Oursons_g%C3%A9latine_march%C3%A9_Rouffignac.jpg',
+    type: 'topping'
+},
+{
+    name: 'Resses crumbs',
+    price: .50,
+    quantity: 0,
+    image: 'https://m.media-amazon.com/images/I/81aP46S5r3L.jpg',
     type: 'topping'
 },
 {
@@ -61,7 +89,26 @@ const items = [{
     quantity: 0,
     image: 'https://www.simplyscratch.com/wp-content/uploads/2012/07/fun-cones.jpg',
     type: 'vessel'
-}]
+},
+{
+    name: 'Tub',
+    price: 12,
+    quantity: 0,
+    image: 'https://media.istockphoto.com/id/512476873/vector/icecream-inside-the-disposable-cup.jpg?s=612x612&w=0&k=20&c=99tooCxhG5QGqZLdbYpatpwlQ5pera5iOkm6ybbNQjE=',
+    type: 'vessel'
+},
+{
+    name: 'Cup',
+    price: 3,
+    quantity: 0,
+    image: 'https://images.squarespace-cdn.com/content/v1/543fec0fe4b04bbe6d9f983a/1584724710900-6F53266BW7E7QJB17WUJ/cup_large_2500px.jpg?format=2500w',
+    type: 'vessel'
+}
+]
+
+let cones = []
+
+let activeCone = -1
 
 // !SECTION
 
@@ -70,19 +117,95 @@ const items = [{
 
 function addItem(name) {
     let item = items.find((item) => item.name == name)
+
+    if (item.type == 'vessel') {
+        newCone(item)
+    } else if (activeCone != -1) {
+        if (item.type == 'ice cream' && cones[activeCone].scoops.length < 2) {
+            cones[activeCone].scoops.push(item.name)
+
+        } else if (item.type == 'ice cream') {
+            alertAutoClose('Only 2 scoops per vessel!')
+            return
+        }
+        if (item.type == 'topping' && cones[activeCone].scoops.length > 0) {
+            if (!cones[activeCone].toppings.find((topping) => topping.name == item.name)) {
+                cones[activeCone].toppings.push({
+                    name: item.name,
+                    amount: 1
+                })
+            } else {
+                cones[activeCone].toppings.find((topping) => topping.name == item.name).amount++
+            }
+        } else if (item.type == 'topping') {
+            alertAutoClose('Add a scoop first!')
+            return
+        }
+    } else {
+        alertAutoClose('Select a vessel first!')
+        return
+    }
+
     item.quantity++
     draw()
 }
 
 function removeItem(name, e) {
     e.preventDefault()
+    if (activeCone == -1) return
+
     let item = items.find((item) => item.name == name)
+
+    if (item.type == 'vessel') {
+        alertAutoClose('Please delete the cone from the total page')
+    } else if (item.type == 'topping') {
+        let coneItem = cones[activeCone].toppings
+
+        if (coneItem.find((flavor) => flavor.name == item.name).amount == 1) {
+            coneItem.splice(cones[activeCone][(item.type == 'ice-cream' ? 'scoops' : 'toppings')].findIndex((flavor) => flavor.name == item.name), 1)
+        } else {
+            coneItem.find((flavor) => flavor.name == item.name).amount--
+        }
+    } else {
+        cones[activeCone].scoops.splice(cones[activeCone].scoops.findIndex((flavor) => flavor == item.name), 1)
+    }
     if (item.quantity == 0) return
     item.quantity--
+
     draw()
 }
 
+function newCone(item) {
+    cones.push(
+        {
+            vessel: item.name,
+            scoops: [],
+            toppings: []
+        }
+    )
+    selectCone(cones.length - 1)
+}
+
 function checkout() {
+
+    if (cones.length == 0) {
+        Swal.fire(
+            'Error',
+            'Your cart is empty.',
+            'question'
+        )
+        return
+    }
+    if (cones.find((cone) => cone.scoops.length == 0)) {
+        console.log('hi');
+        Swal.fire(
+            'Error',
+            'You have empty vessels in your cart.',
+            'question'
+        )
+        return
+    }
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -102,6 +225,7 @@ function checkout() {
     }).then((result) => {
         if (result.isConfirmed) {
             items.forEach((item) => item.quantity = 0)
+            cones = []
             draw()
             swalWithBootstrapButtons.fire(
                 'Order submit',
@@ -119,6 +243,50 @@ function checkout() {
     })
 }
 
+function selectCone(id) {
+    activeCone = id
+    draw()
+}
+
+function removeCone(id) {
+    document.getElementById(id).remove()
+    let cone = cones[id]
+    cones.splice(id, 1)
+
+    items.find((item) => item.name == cone.vessel).quantity--
+    if (cone.scoops.length > 0) {
+        cone.scoops.forEach((scoop) => {
+            items.find((item) => scoop == item.name).quantity--
+        })
+    }
+    if (cone.toppings.length > 0) {
+        cone.toppings.forEach((topping) => {
+            items.find((item) => topping.name == item.name).quantity -= topping.amount
+        })
+    }
+    draw()
+    selectCone(-1)
+}
+
+function alertAutoClose(message) {
+    let timerInterval
+    Swal.fire({
+        title: message,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+    })
+}
+
 // !SECTION
 
 
@@ -128,7 +296,7 @@ function makeDivs() {
     items.forEach((item) => {
         let element = document.createElement('div')
         element.innerHTML = `
-        <div class="card p-1" onclick="addItem('${item.name}')" oncontextMenu="removeItem('${item.name}', event)">
+        <div class="card p-2" onclick="addItem('${item.name}')" oncontextMenu="removeItem('${item.name}', event)">
             <img src="${item.image}" alt="${item.name} image">
             <p>${item.name} $${item.price}</p>
         </div>
@@ -159,9 +327,45 @@ function constructCartDiv(item) {
 function draw() {
     let itemDump = document.getElementById('item-dump')
     itemDump.innerHTML = ''
-    items.forEach((item) => {
-        if (item.quantity > 0) itemDump.appendChild(constructCartDiv(item))
-    })
+    for (let i = 0; i < cones.length; i++) {
+        let cone = cones[i]
+
+        let scoopHTML = ''
+        cone.scoops.forEach((scoop) => scoopHTML += scoop + "<br>")
+
+        let toppingHTML = ''
+        cone.toppings.forEach((topping) => {
+            toppingHTML += `
+                <div class="col-6">
+                    <p>${topping.name}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p>${topping.amount}</p>
+                </div>
+            `
+        })
+        itemDump.innerHTML += `
+        <div class="col-12 py-2 ice-cream-object ${(activeCone != -1 ? (i == activeCone ? 'active-cone' : '') : '')}" id="${i}">
+            <div class="row">
+                <p class="fs-5 fw-bold">Toppings:</p>
+                ${toppingHTML}
+            </div>
+            <div class="row">
+                <p class="fs-5 fw-bold">Scoops:</p>
+                <p>${scoopHTML}</p>
+            </div>
+            <div class="row">
+                <p class="fs-5 fw-bold">Cone:</p>
+                <p>${cone.vessel}</p>
+            </div>
+            <div class="row justify-content-around mt-2">
+                <button class="btn btn-primary col-5" onclick="selectCone('${i}')">Select</button>
+                <button class="btn btn-danger col-5" onclick="removeCone('${i}')">Remove</button>
+            </div>
+        </div>
+        `
+    }
+
     let grandTotal = 0
     items.forEach((item) => grandTotal += item.price * item.quantity)
     document.getElementById('price').innerText = grandTotal

@@ -2,14 +2,12 @@ body {
     background-color: wheat;
 }
 
-p {
-    margin: 0;
+img {
+    border-radius: 5px;
 }
 
-.receipt {
-    border-bottom: solid 2px grey;
-    color: rgb(0, 136, 255);
-    padding: .25em;
+p {
+    margin: 0;
 }
 
 .ingredient-type {
@@ -20,7 +18,8 @@ p {
 }
 
 .receipt-container {
-    background-color: white;
+    background-color: rgb(79, 79, 79);
+    color: white;
     box-shadow: 1px 1px 8px grey;
 }
 
@@ -35,6 +34,26 @@ p {
     object-fit: cover;
 }
 
-.item-dump>div:nth-child(even) {
-    background-color: rgb(186, 186, 186);
+.ice-cream-object {
+    border-bottom: solid 2px rgb(122, 122, 122);
+}
+
+.cart {
+    border-bottom: dashed 2px white;
+}
+
+.active-cone {
+    box-shadow: 0 0 10px rgb(255, 255, 255);
+    border: solid 2px white;
+    animation: linear 1.5s active-cone infinite;
+}
+
+@keyframes active-cone {
+    0% {
+        box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+
+    50% {
+        box-shadow: 0 0 50px rgb(255, 255, 255);
+    }
 }
