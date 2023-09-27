@@ -114,7 +114,7 @@ function makeDivs() {
             <p>${item.name} $${item.price}</p>
         </div>
         `
-        element.classList = 'col-12 col-md-6 my-1'
+        element.classList = 'col-12 col-md-6 col-lg-4 my-1'
         document.getElementById(item.type).appendChild(element)
     })
 }
@@ -122,13 +122,13 @@ function makeDivs() {
 function constructCartDiv(item) {
     let element = document.createElement('div')
     element.innerHTML = `
-    <div class="row">
+    <div class="row py-1">
     <div class="col-5 d-flex align-items-center">
                         <p>${item.name}</p>
                     </div>
                     <div class="col-7 d-flex justify-content-between align-items-center">
                         <p>${item.quantity}</p>
-                        <p>${item.price}</p>
+                        <p>$${item.price}</p>
                         <p>$${item.price * item.quantity}</p>
                     </div>
                     </div>

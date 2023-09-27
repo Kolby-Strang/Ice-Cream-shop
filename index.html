@@ -18,7 +18,7 @@
 
     <main class="container-fluid">
         <div class="row">
-            <div class="col-7 col-md-5 receipt-container">
+            <div class="col-7 col-md-5 col-lg-4 receipt-container">
                 <div class="row receipt">
                     <div class="col-5 d-flex align-items-center">
                         <p>Item</p>
@@ -39,10 +39,11 @@
                     <button class="btn btn-warning" onclick="checkout()">Checkout</button>
                 </div>
             </div>
-            <div class="col-5 col-md-7 px-3">
+            <div class="col-5 col-md-7 col-lg-8 px-3">
                 <div class="row" id="topping">
                     <div class="col-12">
                         <p class="ingredient-type">Toppings</p>
+                        <p class="text-muted">left click to add/right click to remove</p>
                     </div>
                     <!-- TOPPINGS FILL HERE -->
                 </div>
@@ -51,6 +52,12 @@
                         <p class="ingredient-type">Ice Cream</p>
                     </div>
                     <!-- ICE CREAM FILL HERE -->
+                </div>
+                <div class="row" id="vessel">
+                    <div class="col-12">
+                        <p class="ingredient-type">Vessel</p>
+                    </div>
+                    <!-- VESSELS FILL HERE -->
                 </div>
             </div>
         </div>
