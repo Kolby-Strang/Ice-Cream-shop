@@ -226,6 +226,7 @@ function checkout() {
         if (result.isConfirmed) {
             items.forEach((item) => item.quantity = 0)
             cones = []
+            selectCone(-1)
             draw()
             swalWithBootstrapButtons.fire(
                 'Order submit',
